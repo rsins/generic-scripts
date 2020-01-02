@@ -1,0 +1,7 @@
+int(4)
+multiply(float(5.43685), float(3.25))
+assign(pi, float(2.1415926))
+assign(r, int(10))
+assign(area, multiply(var(pi), multiply(var(r), var(r))))
+var(area)
+add(str(Area = ), str(var(area)))
