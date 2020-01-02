@@ -2,6 +2,8 @@
 #***************************************************************************
 # Author      : Ravi Kant Singh
 # Description : Python script to parse expression and calculate value.
+#               Check example file - example_parse_input_expression
+#
 # Created     : 6 Jul 2018
 #***************************************************************************
 
