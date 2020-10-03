@@ -2,8 +2,6 @@
 #***************************************************************************
 # Author      : Ravi Kant Singh
 # Description : Python script to parse expression and calculate value.
-#               Check example file - example_parse_input_expression
-#
 # Created     : 6 Jul 2018
 #***************************************************************************
 
@@ -47,7 +45,7 @@ class Calculator():
   
    @staticmethod
    @FuncAttrs(2, 'Divide first number with second number.')
-   def OpDevide(a, b):
+   def OpDivide(a, b):
       return a / b
   
    @staticmethod
@@ -135,7 +133,7 @@ class Evaluator():
                    "add"         : Calculator.OpAdd             ,
                    "substract"   : Calculator.OpSubstract       ,
                    "multiply"    : Calculator.OpMultiply        ,
-                   "devide"      : Calculator.OpDevide          ,
+                   "divide"      : Calculator.OpDivide          ,
                    "assign"      : Calculator.OpAssign          ,
                    "var"         : Calculator.OpVar             ,
                 }
@@ -189,12 +187,8 @@ class Evaluator():
          sys.exit(1)
       for i in range(funcDef.argCount):
          args[funcDef.argCount - i - 1] = evalValues.pop()
-      if funcDef.argCount == 1:
-          val = funcDef(args[0])
-      elif funcDef.argCount == 2:
-          val = funcDef(args[0], args[1])
-      elif funcDef.argCount == 3:
-          val = funcDef(args[0], args[1], args[2])
+      # Dynamically variable number of args can be passed.
+      val = funcDef(*args)
       evalValues.append(val)
 
    # Using modified Shunting-yard algorithm
@@ -279,4 +273,3 @@ printArt()
 
 if __name__ == "__main__":
    main(sys.argv[1:])
-
