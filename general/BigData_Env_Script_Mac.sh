@@ -2,7 +2,8 @@
 #===============================================================================
 #
 #        AUTHOR: Ravi Singh (rsins), 
-#   DESCRIPTION: Script to start or stop or restart the apps in certain order
+#   DESCRIPTION: Script to start or stop or restart the apps in certain order.
+#                Assumption is hadoop and spark were installed on mac using brew.
 #
 #  REQUIREMENTS: ---
 #         NOTES: ---
