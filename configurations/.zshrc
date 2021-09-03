@@ -462,5 +462,17 @@ bindkey "$terminfo[kcud1]" down-line-or-beginning-search # Down
 bindkey "" end-of-line # Map end-of-line key in the same way as zprezto editor module to prevent issue with tmux-resurrect.
 setopt CLOBBER # Allow pipe to existing file. Prevent issue with history save in tmux-resurrect.
 
+# Example for my prompt in .p10k.sh
+#  function prompt_shell_level() {
+#    #if [ "`cl -n`" -eq 0 -a -z "$MYTMUXSHELL" ]; then
+#    if [ "`cl -n`" -eq 0 ]; then
+#    	# Do nothing.
+#    else
+#      p10k segment -f 208 -i '⌂' -t "level: `cl -n`"
+#      #p10k segment -f 208 -i '📌' -t "level: `cl -n`"
+#      #p10k segment -f 208 -i '🔗' -t "level: `cl -n`"
+#    fi
+#  }
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
