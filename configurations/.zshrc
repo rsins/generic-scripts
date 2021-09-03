@@ -117,7 +117,7 @@ if [[ ":$PATH:" != *":~/scripts:"* ]]; then
 fi
 export PKG_CONFIG_PATH="/usr/local/opt/ncurses/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/lib"
 # stty -ixany
-stty -ixon
+stty -ixon >> /dev/null 2>&1 
 
 export LC_ALL=en_US.UTF-8
 
