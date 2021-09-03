@@ -1,7 +1,15 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
+export ZSH_DISABLE_COMPFIX=true
 export ZSH="/Users/${LOGNAME}/.oh-my-zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -9,6 +17,7 @@ export ZSH="/Users/${LOGNAME}/.oh-my-zsh"
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 #ZSH_THEME="robbyrussell"
 ZSH_THEME="agnoster"
+#ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -148,12 +157,13 @@ alias excel='open -a "Microsoft Excel"'
 alias startRunAll='sudo spctl --master-enable'
 alias stopRunAll='sudo spctl --master-disable'
 
+alias mpip='pip --trusted-host pypi.org --trusted-host files.pythonhosted.org'
+alias mpip3='pip3 --trusted-host pypi.org --trusted-host files.pythonhosted.org'
+
 # Java version handling.
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`              # Default to Java 8
-alias j10='export JAVA_HOME=`/usr/libexec/java_home -v 10`'
+alias jl='export JAVA_HOME=`/usr/libexec/java_home`'
 alias j8='export JAVA_HOME=`/usr/libexec/java_home -v 1.8`'
-alias j8o='export JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_131`'
-alias j6='export JAVA_HOME=`/usr/libexec/java_home -v 1.6`'
 alias j='/usr/libexec/java_home -V'
 
 #------------------------------------------------------------
@@ -441,6 +451,16 @@ autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-bindkey "$terminfo[kcuu1]" up-line-or-beginning-search # Up
+bindkey "$terminfo[kcuu1]" up-line-or-beginning-search   # Up
 bindkey "$terminfo[kcud1]" down-line-or-beginning-search # Down
 
+
+# For tmux and resurrect plugin to work with zsh
+#     https://github.com/tmux-plugins/tmux-resurrect/issues/248#issuecomment-759383846
+# Add this in resurrect save.sh
+#     local history_w='fc -lLn -64 >!'
+bindkey "" end-of-line # Map end-of-line key in the same way as zprezto editor module to prevent issue with tmux-resurrect.
+setopt CLOBBER # Allow pipe to existing file. Prevent issue with history save in tmux-resurrect.
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -1,0 +1,213 @@
+# -----------------------------------------------------------------------
+# TMUX settings
+# -----------------------------------------------------------------------
+
+# default shell
+set-option -g default-command "/bin/zsh"
+set-option -g default-shell   "/bin/zsh"
+
+# make tmux display things in 256 colors
+set   -g default-terminal "screen-256color-bce"
+
+# set scrollback history to 50000 (50k)
+set   -g history-limit 50000
+
+# set Ctrl-a as the default prefix key combination
+# and unbind C-b to free it up
+set   -g prefix C-a
+unbind C-b
+
+# use send-prefix to pass C-a through to application
+bind   C-a send-prefix
+
+# Shorten command delay
+set   -sg escape-time 1
+
+# set window and pane index to 1 (0 by default)
+set   -g base-index 1
+setw  -g pane-base-index 1
+set   -g renumber-windows on  # renumber windows when a window is closed
+
+# Window list option
+set   -g mode-style 'bg=colour235,fg=colour120' 
+
+# Window style options
+setw  -g window-style 'bg=colour234'
+setw  -g window-active-style 'bg=black'
+# setw  -g pane-active-border-style ''
+
+# Window shift/move left or right option
+bind  -n S-Up      swap-window -t -1\; select-window -t -1
+bind  -n S-Down    swap-window -t +1\; select-window -t +1
+bind  -n S-Right   next-window
+bind  -n S-Left    previous-window
+
+# Clock mode
+setw  -g clock-mode-style 12
+
+# Bind reload of configuration file
+# reload ~/.tmux.conf using PREFIX r
+unbind r
+bind   r source-file ~/.tmux.conf \; display "Config ~/.tmux.conf reloaded!"
+
+# Pane Border Status
+# set -g pane-border-status bottom
+# set -g pane-border-format "#P: #{pane_current_command}"
+
+# highlight the current window in the status bar (blue background)
+#       #I - window index
+#       #W - window title
+#       #F - window flag
+setw  -g window-status-current-format '#[bg=blue,fg=cyan,bold]#I#[bg=blue,fg=cyan]:#[fg=color12]#W#[fg=dim]#F'
+
+# set status bar design
+set   -g status-style 'bg=colour235,fg=colour12'
+set   -g status-interval 1
+set   -g status-right ' #{?client_prefix,#[reverse]<^A>#[noreverse] ,}#{=21:pane_title} %a %I:%M:%S %p %d-%b-%Y '
+set   -g status-right-length 60
+set   -g message-style 'bg=colour15,fg=colour52'
+
+# use PREFIX | to split window horizontally and PREFIX _ to split vertically
+# open shell in the current directory
+bind   '|'  split-window -h  -c '#{pane_current_path}'
+bind   '\'  split-window -fh -c '#{pane_current_path}'
+bind   '-'  split-window -v  -c '#{pane_current_path}'
+bind   '_'  split-window -fv -c '#{pane_current_path}'
+bind   '%'  split-window -h  -c '#{pane_current_path}'
+bind   '"'  split-window -v  -c '#{pane_current_path}'
+
+# For force resize option
+setw   -g aggressive-resize
+
+# Send the same command to all panes/windows/sessions
+unbind E
+bind E command-prompt -p "Command for all sessions & panes:" \
+       "run \"if test ! -z '%1' ;                            \
+              then {                                         \
+                 tmux list-sessions                                        -F '##{session_name}'                                      | \
+                 xargs -I SESS          tmux list-windows -t SESS          -F 'SESS:##{window_index}'                                 | \
+                 xargs -I SESS_WIN      tmux list-panes   -t SESS_WIN      -F 'SESS_WIN.##{pane_index} ##{pane_current_command} zsh' | \
+                 tail  -r | awk   -F' ' '{ if ( $2 == $3 ) {print $1} }'                                                              | \
+                 xargs -I SESS_WIN_PANE tmux send-keys    -t SESS_WIN_PANE -l '%1' \\\\; \
+                                             send-keys    -t SESS_WIN_PANE C-m ;         \
+                 tmux display-message 'Command pushed to all panes : %1' ;               \
+              };                                                                         \
+              fi; \""
+
+# Exit all tmux sessions
+unbind e
+bind e command-prompt -1 -p "Exit all sessions? [y/n]:" \
+       "run \"if test '%1' = 'y' -o '%1' = 'Y' ;        \
+              then {                                    \
+                 tmux new-window -n 'spare-exit-all' ;  \
+                 tmux list-sessions                                        -F '##{session_name}'                                      | \
+                 xargs -I SESS          tmux list-windows -t SESS          -F 'SESS:##{window_index}'                                 | \
+                 xargs -I SESS_WIN      tmux list-panes   -t SESS_WIN      -F 'SESS_WIN.##{pane_index} ##{pane_current_command} zsh' | \
+                 grep  -v `tmux display-message -p '##{session_name}:##{window_index}.##{pane_index}'`                                | \
+                 tail  -r | awk   -F' ' '{ if ( $2 == $3 ) {print $1} }'                                                              | \
+                 xargs -I SESS_WIN_PANE tmux send-keys    -t SESS_WIN_PANE -l 'sleep 0.1; exit ' \\\\; \
+                                             send-keys    -t SESS_WIN_PANE    C-m ;                    \
+                 tmux send-keys -l 'sleep 0.1; exit' \\\\;                                             \
+                      send-keys    C-m ;                                                               \
+              };                                                                                       \
+              else { tmux display-message 'Exit Cancelled.' ; };                                       \
+              fi; \""
+
+# Run a command in new window
+unbind `
+bind ` command-prompt -p "Command for new window :" \
+       "run \"if test ! -z '%1' ;                   \
+       then {                                       \
+       		tmux new-window -n '%1' '               \
+       		                         printf %.0s- {1..'`tmux display -p '#{window_width}'`'} ; \
+       		                         echo                                                    ; \
+       		                         echo .... \\\"%%%\\\"                                   ; \
+       		                         printf %.0s- {1..'`tmux display -p '#{window_width}'`'} ; \
+       		                         echo                                                    ; \
+       		                         echo                                                    ; \
+       		                         %1                                                      ; \
+       		                         echo                                                    ; \
+       		                         printf %.0s- {1..'`tmux display -p '#{window_width}'`'} ; \
+       		                         echo ; echo Press any key to continue. ; read -n 1      ; \
+       		                        '                                                        ; \
+       };  \
+       fi; \""
+
+# Create window and ask for window name
+unbind C
+bind C command-prompt -p "New Window Name:"                         \
+       "run \"if test ! -z '%1' ;                                   \
+              then { tmux new-window ; tmux rename-window '%1' ; }; \
+              else { tmux new-window ; };                           \
+              fi; \""
+
+#--------------------- Pane Resize Settings -------------------------
+bind   -r j resize-pane -D 1
+bind   -r k resize-pane -U 1
+bind   -r l resize-pane -L 1
+bind   -r h resize-pane -R 1
+
+# ---- switch panes using Alt-arrow without prefix ----
+bind   -n M-Left  select-pane -L
+bind   -n M-Right select-pane -R
+bind   -n M-Up    select-pane -U
+bind   -n M-Down  select-pane -D
+
+#----------------------- Mouse Settings -----------------------------
+# disable mouse control by default - change 'off' to 'on' to enable by default.
+set    -g mouse on
+bind    m set -g mouse on  \; display "Mouse ON"
+bind    M set -g mouse off \; display "Mouse OFF"
+
+# For mouse scrolling
+set    -g terminal-overrides 'xterm*:smcup@:rmcup@'
+
+# For mouse selection and copy in split mode
+bind   -n WheelUpPane     if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
+bind   -n WheelDownPane   select-pane -t= \; send-keys -M
+bind   -n C-WheelUpPane   send-keys up
+bind   -n C-WheelDownPane send-keys down
+
+# To copy, drag to highlight text, press Enter and then release mouse
+# Use vim keybindings in copy mode
+setw   -g mode-keys vi
+# Update default binding of `Enter` to also use copy-pipe
+bind   -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe 'reattach-to-user-namespace pbcopy' \; display " Text copied to clipboard."
+
+# Double LMB Select & Copy (Word)
+bind   -T copy-mode-vi DoubleClick1Pane  send-keys -X select-word \; send-keys -X copy-pipe 'reattach-to-user-namespace pbcopy' 
+bind   -n DoubleClick1Pane copy-mode -M \; send-keys -X select-word \; send-keys -X copy-pipe 'reattach-to-user-namespace pbcopy' 
+
+# Triple LMB Select & Copy (Line)
+bind-key -T copy-mode-vi TripleClick1Pane send-keys -X select-line \; send-keys -X copy-pipe 'reattach-to-user-namespace pbcopy' 
+bind-key -n TripleClick1Pane copy-mode -M \; send-keys -X select-line \; send-keys -X copy-pipe 'reattach-to-user-namespace pbcopy' 
+
+#----------------------- Tmux Plugins --------------------------------
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'git@github.com/user/plugin'
+# set -g @plugin 'git@bitbucket.com/user/plugin'
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-copycat'
+set -g @plugin 'tmux-plugins/tmux-urlview'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-fpp'
+
+# Plugin related options
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-vim 'session'
+set -g @resurrect-dir '~/.tmux/data/resurrect'
+set -g @resurrect-save-bash-history 'on'
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '0'
+set -g @fpp-key 'F'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+

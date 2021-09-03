@@ -2,6 +2,10 @@
 # TMUX settings
 # -----------------------------------------------------------------------
 
+# default shell
+set-option -g default-command "/bin/bash"
+set-option -g default-shell   "/bin/bash"
+
 # make tmux display things in 256 colors
 set   -g default-terminal "screen-256color-bce"
 
@@ -33,8 +37,8 @@ setw  -g window-active-style 'bg=black'
 # setw  -g pane-active-border-style ''
 
 # Window shift/move left or right option
-bind  -n S-Up      swap-window -t -1
-bind  -n S-Down    swap-window -t +1
+bind  -n S-Up      swap-window -t -1\; select-window -t -1
+bind  -n S-Down    swap-window -t +1\; select-window -t +1
 bind  -n S-Right   next-window
 bind  -n S-Left    previous-window
 
