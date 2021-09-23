@@ -32,9 +32,10 @@ set   -g renumber-windows on  # renumber windows when a window is closed
 set   -g mode-style 'bg=colour235,fg=colour120' 
 
 # Window style options
-setw  -g window-style 'bg=colour234'
-setw  -g window-active-style 'bg=black'
-# setw  -g pane-active-border-style ''
+setw  -g window-active-style 'bg=default'
+setw  -g window-style 'bg=default'
+#setw  -g window-active-style 'bg=black'
+#setw  -g window-style 'bg=colour234'
 
 # Window shift/move left or right option
 bind  -n S-Up      swap-window -t -1\; select-window -t -1
@@ -61,7 +62,8 @@ bind   r source-file ~/.tmux.conf \; display "Config ~/.tmux.conf reloaded!"
 setw  -g window-status-current-format '#[bg=blue,fg=cyan,bold]#I#[bg=blue,fg=cyan]:#[fg=color12]#W#[fg=dim]#F'
 
 # set status bar design
-set   -g status-style 'bg=colour235,fg=colour12'
+#set   -g status-style 'bg=colour235,fg=colour12'
+set   -g status-style 'bg=default,fg=colour12'
 set   -g status-interval 1
 set   -g status-right ' #{?client_prefix,#[reverse]<^A>#[noreverse] ,}#{=21:pane_title} %a %I:%M:%S %p %d-%b-%Y '
 set   -g status-right-length 60

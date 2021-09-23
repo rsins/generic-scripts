@@ -112,10 +112,11 @@ HISTFILESIZE=10000                       # in file history number of lines
 HISTCONTROL=ignorespace:ignoredups       # no duplicate entries
 setopt histappend                        # append to history, don't overwrite it
 #shopt -s checkwinsize					 # check window size after each command
-if [[ ":$PATH:" != *":~/scripts:"* ]]; then
-   export PATH="/usr/local/sbin:/usr/local/opt/ncurses/bin:$PATH:~/scripts"
+if [[ ":$PATH:" != *":${HOME}/scripts:"* ]]; then
+   export PATH="/usr/local/sbin:/usr/local/opt/ncurses/bin:$PATH:${HOME}/scripts:/usr/local/bin"
 fi
 export PKG_CONFIG_PATH="/usr/local/opt/ncurses/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/lib"
+
 # stty -ixany
 stty -ixon >> /dev/null 2>&1 
 
