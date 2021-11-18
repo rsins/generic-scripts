@@ -1553,10 +1553,11 @@
   }
 
   function prompt_shell_level() {
-    if [ "`cl -n`" -eq 0 ]; then
+    if [ "`cl -n`" "==" "0" ]; then
     	# Do nothing.
     else
       p10k segment -f 208 -i '⌂' -t "level: `cl -n`"
+      #p10k segment -f 208 -i '✨' -t "level: `cl -n`"
       #p10k segment -f 208 -i '📌' -t "level: `cl -n`"
       #p10k segment -f 208 -i '🔗' -t "level: `cl -n`"
     fi

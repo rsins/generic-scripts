@@ -328,7 +328,16 @@ function menu () {
 #------------------------------------------------------------
 # Print the current level inside the shell
 function cl () {
-   set | grep CURRENT_LEVEL | awk -F'=' '{if (NF == 2) {if ("'$1'" == "-n") {print $2;} else {if ($2 == 0) {print "You are in the root shell.";} print "Current Shell Level: " $2;} }}'
+   if test "$1" "==" "-n"
+   then
+   	   printf "$CURRENT_LEVEL"
+   else
+       if test "$CURRENT_LEVEL" "==" "0"
+       then
+   	       printf "You are in the root shell.\n"
+       fi
+   	   printf "Current Shell Level: $CURRENT_LEVEL\n"
+   fi
 }
 
 
@@ -336,27 +345,22 @@ function cl () {
 # Scripts - To Handle Prompt and shell level
 #------------------------------------------------------------
 # Current shell level to indicate the level inside csh shells.
-if test -z $CURRENT_LEVEL
+if test -z "$CURRENT_LEVEL"
 then
    declare -x CURRENT_LEVEL=0
+   declare -x CURRENT_LEVEL_PID=$$
 else
    # To handle the shell through telnet or through tmux
    if test -n "$TMUX" -a "$CURRENT_LEVEL" "==" "0" -a -z "$MYTMUXSHELL"
    then
       declare -x MYTMUXSHELL="$TMUX shell"
-   else
+      declare -x CURRENT_LEVEL_PID=$$
+   elif test "$CURRENT_LEVEL_PID" "!=" "$$"
+   then
       declare -x CURRENT_LEVEL=`expr $CURRENT_LEVEL + 1`
+      declare -x CURRENT_LEVEL_PID=$$
    fi
 fi
-
-# Shell Prompt
-# Handle normal shell and tmux shell
-#export TZ=":Asia/Calcutta"
-#if [ "`cl -n`" -eq 0 -a -z "$MYTMUXSHELL" ]; then
-#        PS1='\[\033[0m\]\[\033[37m\][ \[\033[32m\]\u@\h\[\033[0m\] \[\033[33m\]\w\[\033[37m\] ] \n[ \[\033[34m\]\D{%a %b %d %Y %r %Z}\[\033[37m\]\[\033[31m\]$(git_branch -p)\[\033[00m\] ] \[\033[0m\]'
-#else
-#        PS1='\[\033[0m\]\[\033[37m\][ \[\033[32m\]\u@\h\[\033[0m\] \[\033[33m\]\w\[\033[37m\] ] \n[ \[\033[36m\]level: \[\033[35m\]`cl -n`\[\033[0m\], \[\033[34m\]\D{%a %b %d %Y %r %Z}\[\033[37m\]\[\033[31m\]$(git_branch -p)\[\033[00m\] ] \[\033[0m\]'
-#fi
 
 
 #------------------------------------------------------------
@@ -372,13 +376,6 @@ function tx () {
      return 
   fi
   
-  # if [[ $(echo "$(tmux -V | cut -d" " -f2) >= 2.1" | tr -d [a-zA-Z] | bc) -eq 1 ]]
-  # then
-  #   ERROR_MSG="no server running on"
-  # else
-  #   ERROR_MSG="failed to connect to server: Connection refused"
-  # fi
-
   ERROR_MSG_1="no server running on"
   ERROR_MSG_2="error connecting to"
 
