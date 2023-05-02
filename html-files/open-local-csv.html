@@ -2,6 +2,16 @@
 <html>
     <head>
         <title>Open Local CSV File</title>
+
+        <!--
+            Html page with script which can help converting plain csv data from local file system to html table in readable format. 
+            It also provides option to freeze first x number of rows and first y number columns. 
+            Click on slider toggle button shown at top right corner of page to convert csv data to html table. 
+            It let's you choose to freeze rows and columns as required. The option to choose is provided only once.
+            You can also press 'p' to show the option to convert csv to table.
+            You can click on first column of any row to highlight full row, press escape key to remove highlighting.
+        -->
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!-- script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script -->
         <!-- link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/cupertino/jquery-ui.css" rel="stylesheet" type="text/css" -->
@@ -222,11 +232,6 @@
             z-index: 1;
             }
             
-            /*
-            tr>th:first-child {
-            z-index: 3;
-            }*/
-            
             th,
             td {
             font-size: 12px;
@@ -255,6 +260,14 @@
             
             tbody>tr:nth-child(even) {
                 background-color: lightgray;
+            }
+
+            tr.row-selected td {
+                background-color: #fffec9;
+            }
+
+            tr.row-selected th {
+                background-color: #fffec9;
             }
             
             /* ---------- Drag and Drop File Section ----------------- */
@@ -541,6 +554,15 @@
                                 e.preventDefault();
                                 showPreferences();
                             }
+
+                            // On escape key clear the highlighted rows
+                            if (e.key=='Escape'||e.key=='Esc'||e.keyCode==27) {
+                                // Remove highlighted rows on escape.
+                                var tr = $("#" + window.tableID + " tr");
+                                if(tr.hasClass("row-selected")) {
+                                    tr.removeClass("row-selected");
+                                }
+                            }
                         }
                     }, true);
 
@@ -673,6 +695,17 @@
 
                     // Update row and column attributes for freezing rows and columns.
                     updateHeaderRowsAndColumnsProperties(tbl, numHeaderRows, numHeaderColumns, rows.length, maxColumnCounts);
+
+                    // Highlight row on button click.
+                    $("#" + window.tableID + " tr").find("th:first").on("click", function() {
+                        var tr = $(this).parent();
+                        if(tr.hasClass("row-selected")) {
+                            tr.removeClass("row-selected");
+                        } else {
+                            tr.addClass("row-selected");
+                        }
+                        
+                    });
 
                     return tbl;
                 }
