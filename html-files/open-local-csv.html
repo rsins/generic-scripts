@@ -258,15 +258,24 @@
             }
             
             /* ---------- Drag and Drop File Section ----------------- */
+            #drag-and-drop-container {
+                justify-content: center; 
+                width:100%; 
+                align-items: center; 
+                display:flex; 
+                margin-top: 35px;
+            }
+
             #drag-and-drop {
-                width:300px;
-                height:100px;
-                line-height:100px;
+                width:400px;
+                height:150px;
+                line-height:150px;
                 border:5px dashed #CCC;
 
                 font-family:Verdana;
                 text-align:center;
             }
+
         </style>
 
         <script>
@@ -320,7 +329,7 @@
 
                     $("#" + window.sliderButtonID).show();
                     showCSVData();
-                    $("#drag-and-drop").hide();
+                    $("#drag-and-drop-container").hide();
 
                     // Read file data
                     const reader = new FileReader();
@@ -852,8 +861,10 @@
         </script>
     </head>
     <body>
-        <div display="flex" style="justify-content: center; width:100%; align-items: center; display:flex;">
-            <div id="drag-and-drop">Drop file here [or click here]</div>
+        <div id="drag-and-drop-container">
+            <div id="drag-and-drop">
+            	Drop CSV file here [or click here]
+            </div>
         </div>
     </body>
 </html>
