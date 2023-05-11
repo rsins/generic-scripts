@@ -272,10 +272,7 @@
             
             /* ---------- Drag and Drop File Section ----------------- */
             #drag-and-drop-container {
-                justify-content: center; 
                 width:100%; 
-                align-items: center; 
-                display:flex; 
                 margin-top: 35px;
             }
 
@@ -287,11 +284,50 @@
 
                 font-family:Verdana;
                 text-align:center;
+                margin: auto;
+            }
+
+            #div-text {
+                margin: auto;
+                text-align: center;
+            }
+
+            #paste-section {
+                width: 100%;
+                text-align: center;
+                margin: auto;
+                margin-top: 20px;
+            }
+
+            #paste-input {
+                width: 400px;
+                height: 150px;
+                transform: translateX(+100px);
+            }
+
+            #paste-button {
+                width: 200px;
+                height: 25px;
+                transform:translate(-200px, +25px)
             }
 
         </style>
 
         <script>
+            function isEmpty(str) {
+                return (
+                            typeof str == 'undefined'
+                        || !str
+                        || str.length === 0
+                        || str === ""
+                        || !/[^\s]/.test(str)
+                        || /^\s*$/.test(str)
+                        || str.replace(/\s/g,"") === ""
+                    )
+                    ? true
+                    : false;
+            };
+
             $(function() {
                 $('#drag-and-drop').on(
                     'dragover',
@@ -347,13 +383,29 @@
                     // Read file data
                     const reader = new FileReader();
                     reader.addEventListener('load', (event) => {
-                        const result = event.target.result;
+                        // Remove new line and spaces from start and end of content.
+                        const result = event.target.result.replace(/(^\s*(?!.+)\n+)|(\n+\s+(?!.+)$)/g, "");
                         // Do something with result
                         window.contentElement.text(result);
                     });
                     reader.readAsText(files[0]);
                     window.localFileName = files[0].name;
                 }
+
+                // Take csv data frmo textarea and process the provided data.
+                function processPastedContent() {
+                    var csvContent = $("#paste-input").val();
+                    if (isEmpty(csvContent)) {
+                        alert("Nothing to process.");
+                        return;
+                    }
+                    var csvBlob = new Blob([csvContent], { type: 'text/plain' });
+                    var csvFile = new File([csvBlob], "clipboard", {type: "text/plain"});
+                    processFiles([csvFile]);
+                }
+
+                $("#paste-input").val("");
+                $("#paste-button").on('click', processPastedContent);
 
                 console.clear(); console.log('** cleared by PlainCSVToTable script **');
 
@@ -897,6 +949,11 @@
         <div id="drag-and-drop-container">
             <div id="drag-and-drop">
             	Drop CSV file here [or click here]
+            </div>
+            <div id="div-text"><p>.. Or ..</p></div>
+            <div id="paste-section">
+                <textarea id="paste-input"></textarea>
+                <button id="paste-button">Process CSV Content</button>
             </div>
         </div>
     </body>
