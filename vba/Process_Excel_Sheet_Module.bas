@@ -2,8 +2,7 @@ Attribute VB_Name = "Process_Excel_Sheet_Module"
 Dim Current_sheet As Worksheet
 
 Sub Process_Excel_Sheet() '
-Attribute Process_Excel_Sheet.VB_Description = "Macro Created By Ravi"
-Attribute Process_Excel_Sheet.VB_ProcData.VB_Invoke_Func = "e\n14"
+Attribute Process_Excel_Sheet.VB_ProcData.VB_Invoke_Func = "r\n14"
 ' Process_Excel_Sheet Macro
 ' Macro recorded 1/24/2008 by Ravi
 ' Modified multiple times by Ravi
@@ -627,4 +626,5 @@ Private Sub ReOpenCurrentCSVFileWithAllColumnsAsText()
         .Refresh BackgroundQuery:=False
     End With
 End Sub
+
 
