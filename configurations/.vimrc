@@ -1,33 +1,30 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" vim-plug plugin manager
+call plug#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+" let vim-plug manage vim-plug, required
+Plug 'junegunn/vim-plug'
 
 " Python autocompletion plugin
-Plugin 'davidhalter/jedi-vim'
-Plugin 'timakro/vim-searchant'
+Plug 'davidhalter/jedi-vim'
+Plug 'timakro/vim-searchant'
 
 " Plugin for Bash autocompletion
-Plugin 'WolfgangMehner/bash-support'
+Plug 'WolfgangMehner/bash-support'
 
 " Plugin for javascript syntax highliting and indentation
-Plugin 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript'
 
 " Plugin to use with netrc for directory listing
-Plugin 'tpope/vim-vinegar'
+Plug 'tpope/vim-vinegar'
 
 " Plugin for vim tabs
 "Plugin 'humiaozuzu/tabbar'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
+call plug#end()              " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
