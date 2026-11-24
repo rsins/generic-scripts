@@ -148,8 +148,6 @@ alias gits='git status'
 alias gp='git_fetch_pull_merge'
 alias grep='grep --color=auto'
 alias path='echo $PATH'
-alias tclip='$HOME/scripts/tclip.py'
-alias avro='java -jar ~/bin/avro-tools-1.8.2.jar'
 
 alias finder='open -a "Finder"'
 alias numbers='open -a "Numbers"'
@@ -170,14 +168,8 @@ alias j='/usr/libexec/java_home -V'
 #------------------------------------------------------------
 # Aliases - Java Decompilers / Class Visualizers
 #------------------------------------------------------------
-alias cfr='java -jar $HOME/bin/java_decompiler/cfr/cfr-0.145.jar'
-#alias jd='open -a JD-GUI $HOME/bin/java_decompiler/jd/JD-GUI.app'
-#alias jd='java -jar $HOME/bin/java_decompiler/jd/JD-GUI.app/Contents/Resources/Java/jd-gui-1.4.0.jar'
-alias jd='$HOME/scripts/convert_to_full_path_and_run.py $HOME/bin/java_decompiler/jd/JD-GUI.app/contents/MacOS/universalJavaApplicationStub.sh'
-alias jdb='$HOME/scripts/convert_to_full_path_and_run.py -b $HOME/bin/java_decompiler/jd/JD-GUI.app/contents/MacOS/universalJavaApplicationStub.sh'
-alias jad='$HOME/bin/java_decompiler/jad/jad'
-
-alias cv='$HOME/bin/class-visualizer/clsvis.sh'
+alias jd='$HOME/Bin/scripts/convert_to_full_path_and_run.py $HOME/Bin/java_decompiler/JD-GUI.app/contents/MacOS/universalJavaApplicationStub.sh'
+alias fernflower='java -jar $HOME/Bin/java_decompiler/fernflower.jar'
 
 #------------------------------------------------------------
 # Setup for Python
@@ -478,13 +470,13 @@ setopt CLOBBER # Allow pipe to existing file. Prevent issue with history save in
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # brew install zsh-syntax-highlighting
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # -------------- Custom Plugins -------------
 # brew install zsh-autosuggestions
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # brew install zsh-history-substring-search
-source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
